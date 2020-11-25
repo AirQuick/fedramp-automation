@@ -151,7 +151,6 @@
         <sch:let name="results" value="lv:analyze($fedramp-registry/f:fedramp-values/f:value-set[@name='control-implementation-status'], //o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
         <sch:let name="total" value="$results/reports/@count"/>
         <sch:report id="stats-control-requirements" test="exists($results)"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:report>
-        <sch:report id="all-requirements-report" test="$total">There are <sch:value-of select="$total"/> total<sch:value-of select="if ($total=1) then ' control implementation' else ' control implementations'"/>.</sch:report>
     </sch:rule>
 
     <sch:rule context="/o:system-security-plan/o:control-implementation">
