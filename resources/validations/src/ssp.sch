@@ -126,7 +126,7 @@
         <sch:let name="required-controls" value="$selected-profile/*//o:control"/>
         <xsl:message expand-text="yes">level: {lv:sensitivity-level(/)};</xsl:message>
         <sch:assert role="fatal" id="no-fedramp-registry-values" test="exists($registry/f:fedramp-values)">The FedRAMP Registry values are not present, this configuration is invalid.</sch:assert>
-        <sch:assert role="fatal" id="no-security-sensitivity-level" test="exists(lv:sensitivity-level(/))">No sensitivty level found.</sch:assert>
+        <sch:assert role="fatal" id="no-security-sensitivity-level" test="empty(lv:sensitivity-level(/))">No sensitivty level found.</sch:assert>
         <sch:let name="results" value="lv:analyze($registry/f:fedramp-values/f:value-set[@name='control-implementation-status'], //o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
         <sch:let name="total" value="$results/reports/@count"/>
         <sch:report id="stats-control-requirements" test="exists($results)"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:report>
