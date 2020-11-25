@@ -2,25 +2,37 @@
     <x:param name="allow-foreign">true</x:param>
     <x:scenario label="For an OSCAL FedRAMP SSP">
         <x:scenario label="when the registry values path">
+            <x:scenario label="is improperly configured">
+                <x:context>
+                    <x:param name="registry-href" select="'.?select=*.donotmatch'"/>
+                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                        <system-characteristics>
+                            <security-sensitivity-level>low</security-sensitivity-level>
+                        </system-characteristics>
+                    </system-security-plan>
+                </x:context>
+                <x:expect-assert id="no-registry-values" label="it is invalid."/>
+            </x:scenario>
             <x:scenario label="is configured using the default parameter">
                 <x:context>
-                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
+                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                        <system-characteristics>
+                            <security-sensitivity-level>low</security-sensitivity-level>
+                        </system-characteristics>
+                    </system-security-plan>
                 </x:context>
                 <x:expect-not-assert id="no-registry-values" label="it is valid."/>
             </x:scenario>
             <x:scenario label="is properly configured">
                 <x:context>
                     <x:param name="registry-href" select="'../../xml?select=*.xml'"/>
-                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
+                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                        <system-characteristics>
+                            <security-sensitivity-level>low</security-sensitivity-level>
+                        </system-characteristics>
+                    </system-security-plan>
                 </x:context>
                 <x:expect-not-assert id="no-registry-values" label="it is valid."/>
-            </x:scenario>
-            <x:scenario label="is improperly configured">
-                <x:context>
-                    <x:param name="registry-href" select="'../../xml?select=*.donotmatch'"/>
-                    <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
-                </x:context>
-                <x:expect-assert id="no-registry-values" label="it is invalid."/>
             </x:scenario>
         </x:scenario>
         <x:scenario label="when the security sensitivity level">
