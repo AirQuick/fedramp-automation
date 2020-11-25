@@ -132,15 +132,15 @@
 <xsl:template name="report-template" as="xs:string">
     <xsl:param name="analysis" as="element()*"/>
     <xsl:value-of>
-        There&#xA0;are&#xA0;<xsl:value-of select="$analysis/reports/@formal-name"/>&#xA0;items,
+        There are <xsl:value-of select="$analysis/reports/@count"/>&#xA0;<xsl:value-of select="$analysis/reports/@formal-name"/> items total, with
         <xsl:for-each select="$analysis/reports/report">
             <xsl:if test="position() gt 1 and not(position() eq last())">
-                <xsl:value-of select="current()/@count"/>&#xA0;<xsl:value-of select="current()/@value"/>,&#xA0;</xsl:if>
+                <xsl:value-of select="current()/@count"/> set as <xsl:value-of select="current()/@value"/>, </xsl:if>
             <xsl:if test="position() gt 1 and position() eq last()"
-                >&#xA0;and&#xA0;<xsl:value-of select="current()/@count"/>&#xA0;<xsl:value-of select="current()/@value"/></xsl:if>
+                > and <xsl:value-of select="current()/@count"/> set as <xsl:value-of select="current()/@value"/>.</xsl:if>
             <xsl:sequence select="."/>
         </xsl:for-each>
-        .&#xA0;There&#xA0;are&#xA0;<xsl:value-of select="$analysis/reports/@count"/>&#xA0;total&#xA0;and&#xA0;<xsl:value-of select="($analysis/reports/@count - sum($analysis/reports/report/@count))"/>&#xA0;invald.
+        There are <xsl:value-of select="($analysis/reports/@count - sum($analysis/reports/report/@count))"/> invalid items.
     </xsl:value-of>
 </xsl:template>
 
