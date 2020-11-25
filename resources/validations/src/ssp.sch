@@ -54,7 +54,7 @@
 <xsl:variable name="selected-profile" select="doc(resolve-uri($selected-profile-href))"/>
 
 <xsl:function name="lv:if-empty-default">
-    <xsl:param name="element"/>
+    <xsl:param name="element" as="element()*"/>
     <xsl:param name="default" as="xs:anyAtomicType"/>
     <xsl:choose>
         <xsl:when test="not($element/*) and normalize-space($element)=''">
