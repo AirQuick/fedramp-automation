@@ -145,6 +145,7 @@
 </xsl:template>
 
 <sch:pattern>
+    <sch:let name="required-controls" value="$selected-profile/*//o:control"/>
     <sch:rule context="/o:system-security-plan">
         <sch:assert role="fatal" id="no-fedramp-registry-values" test="exists($fedramp-registry/f:fedramp-values)">The FedRAMP Registry values are not present, this configuration is invalid.</sch:assert>
         <sch:assert role="fatal" id="no-security-sensitivity-level" test="boolean(lv:sensitivity-level())">No sensitivty level found.</sch:assert>
@@ -154,10 +155,9 @@
     </sch:rule>
 
     <sch:rule context="/o:system-security-plan/o:control-implementation">
-        <sch:let name="required" value="$selected-profile/*//o:control"/>
         <sch:let name="implemented" value="o:implemented-requirement"/>
-        <sch:let name="missing" value="$required[not(@id = $implemented/@control-id)]"/>
-        <sch:report id="each-required-control-report" test="true()">The following <sch:value-of select="count($required)"/><sch:value-of select="if (count($required)=1) then ' control' else ' controls'"/> are required: <sch:value-of select="$required/@id"/></sch:report>
+        <sch:let name="missing" value="$required-controls[not(@id = $implemented/@control-id)]"/>
+        <sch:report id="each-required-control-report" test="true()">The following <sch:value-of select="count($required-controls)"/><sch:value-of select="if (count($required-controls)=1) then ' control' else ' controls'"/> are required: <sch:value-of select="$required-controls/@id"/></sch:report>
         <sch:assert id="incomplete-implementation-requirements" test="true()">This SSP has not implemented <sch:value-of select="count($missing)"/><sch:value-of select="if (count($missing)=1) then ' control' else ' controls'"/>: <sch:value-of select="$missing/@id"/></sch:assert>
     </sch:rule>
 
