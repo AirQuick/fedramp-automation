@@ -42,9 +42,7 @@
         <profile level="moderate" href="../../../baselines/xml/FedRAMP_MODERATE-baseline-resolved-profile_catalog.xml"/>
         <profile level="high" href="../../../baselines/xml/FedRAMP_HIGH-baseline-resolved-profile_catalog.xml"/>
     </xsl:variable>
-    <xsl:message expand-text="yes">level: {$level};</xsl:message>
     <xsl:variable name="href" select="$profile-map/profile[@level=$level]/@href"/>
-    <xsl:message expand-text="yes">href: {$href};</xsl:message>
     <xsl:sequence select="doc(resolve-uri($href))"/>
 </xsl:function>
 
@@ -126,8 +124,9 @@
         <sch:let name="registry" value="'../../xml?select=*.xml' => lv:registry()"/>
         <sch:let name="selected-profile" value="/ => lv:sensitivity-level() => lv:profile()"/>
         <sch:let name="required-controls" value="$selected-profile/*//o:control"/>
+        <xsl:message expand-text="yes">level: {lv:sensitivity-level(/)};</xsl:message>
         <sch:assert role="fatal" id="no-fedramp-registry-values" test="exists($registry/f:fedramp-values)">The FedRAMP Registry values are not present, this configuration is invalid.</sch:assert>
-        <sch:assert role="fatal" id="no-security-sensitivity-level" test="boolean(lv:sensitivity-level(/))">No sensitivty level found.</sch:assert>
+        <sch:assert role="fatal" id="no-security-sensitivity-level" test="exists(lv:sensitivity-level(/))">No sensitivty level found.</sch:assert>
         <sch:let name="results" value="lv:analyze($registry/f:fedramp-values/f:value-set[@name='control-implementation-status'], //o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
         <sch:let name="total" value="$results/reports/@count"/>
         <sch:report id="stats-control-requirements" test="exists($results)"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:report>
