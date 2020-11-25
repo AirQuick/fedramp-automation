@@ -7,7 +7,7 @@
                     <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
                     <system-characteristics>
                         <!-- no level set in empty element-->
-                        <security-sensitivity-level />
+                        <security-sensitivity-level/>
                     </system-characteristics>
                     </system-security-plan>
                 </x:context>
