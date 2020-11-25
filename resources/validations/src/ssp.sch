@@ -115,15 +115,33 @@
     <xsl:param name="value-set" as="element()*"/>
     <xsl:param name="element" as="element()*"/>
     <xsl:variable name="ok-values" select="$value-set/f:allowed-values/f:enum/@value"/>
-    <analysis name="{$value-set/@name}" formal-name="{$value-set/f:formal-name}" description="{$value-set/f:description}">
-        <reports count="{count($element)}">
+    <analysis>
+        <reports name="{$value-set/@name}"
+            formal-name="{$value-set/f:formal-name}"
+            description="{$value-set/f:description}"
+            count="{count($element)}">
             <xsl:for-each select="$ok-values">
                 <xsl:variable name="match" select="$element[@value=current()]"/>
-                <report id="{current()}" count="{count($match)}"> 
+                <report value="{current()}" count="{count($match)}"> 
                 </report>
             </xsl:for-each>
         </reports>
     </analysis>
+</xsl:template>
+
+<xsl:template name="report-template" as="xs:string">
+    <xsl:param name="analysis" as="element()*"/>
+    <xsl:value-of>
+        There&#xA0;are&#xA0;<xsl:value-of select="$analysis/reports/@formal-name"/>&#xA0;items,
+        <xsl:for-each select="$analysis/reports/report">
+            <xsl:if test="position() gt 1 and not(position() eq last())">
+                <xsl:value-of select="current()/@count"/>&#xA0;<xsl:value-of select="current()/@value"/>,&#xA0;</xsl:if>
+            <xsl:if test="position() gt 1 and position() eq last()"
+                >&#xA0;and&#xA0;<xsl:value-of select="current()/@count"/>&#xA0;<xsl:value-of select="current()/@value"/></xsl:if>
+            <xsl:sequence select="."/>
+        </xsl:for-each>
+        .&#xA0;There&#xA0;are&#xA0;<xsl:value-of select="$analysis/reports/@count"/>&#xA0;total&#xA0;and&#xA0;<xsl:value-of select="($analysis/reports/@count - sum($analysis/reports/report/@count))"/>&#xA0;invald.
+    </xsl:value-of>
 </xsl:template>
 
 <sch:pattern>
@@ -131,8 +149,8 @@
         <sch:assert role="fatal" id="no-fedramp-registry-values" test="exists($fedramp-registry/f:fedramp-values)">The FedRAMP Registry values are not present, this configuration is invalid.</sch:assert>
         <sch:assert role="fatal" id="no-security-sensitivity-level" test="boolean(lv:sensitivity-level())">No sensitivty level found.</sch:assert>
         <sch:let name="results" value="lv:analyze($fedramp-registry/f:fedramp-values/f:value-set[@name='control-implementation-status'], //o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
-        <sch:let name="total" value="sum($results//reports/report/@count)"/>
-        <sch:report id="stats-control-requirements" test="exists($results)"><xsl:sequence select="$results"/></sch:report>
+        <sch:let name="total" value="$results/reports/@count"/>
+        <sch:report id="stats-control-requirements" test="exists($results)"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:report>
         <sch:report id="all-requirements-report" test="$total">There are <sch:value-of select="$total"/> total<sch:value-of select="if ($total=1) then ' control implementation' else ' control implementations'"/>.</sch:report>
     </sch:rule>
 
