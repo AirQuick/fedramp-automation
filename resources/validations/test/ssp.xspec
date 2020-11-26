@@ -1,5 +1,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec" schematron="../src/ssp.sch">
     <x:param name="allow-foreign">true</x:param>
+    <x:param name="only-child-elements">false</x:param>
+    <x:param name="visit-text">true</x:param>
     <x:scenario label="For an OSCAL FedRAMP SSP">
         <x:scenario label="when the registry values path">
             <x:scenario label="is improperly configured">
