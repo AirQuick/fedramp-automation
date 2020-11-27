@@ -73,11 +73,6 @@
     </xsl:choose>
 </xsl:function>
 
-<!--
-    For a given properties and attributes with OSCAL, there will be enumerable
-    lists of items where do not wish to hard code the allowed-values/@enum 
-    values in each Schematron rule. We will to abstract the assertions 
--->
 <xsl:function name="lv:analyze">
     <xsl:param name="value-set" as="element()*"/>
     <xsl:param name="element" as="element()*"/>
