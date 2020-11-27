@@ -39,25 +39,47 @@
             <x:scenario label="and requirements are implemented">
                 <x:scenario label="a count of all total controls">
                     <x:context>
-                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
+                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                            <system-characteristics>
+                                <security-sensitivity-level>low</security-sensitivity-level>
+                            </system-characteristics>
+                            <control-implementation/>
+                        </system-security-plan>
                     </x:context>
-                    <x:expect-report id="all-requirements-report" label="must be reported."/>
+                    <x:expect-report id="each-required-control-report" label="must be reported."/>
                 </x:scenario>
                 <x:scenario label="a count of all controls with a status of planned">
                     <x:context>
-                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
+                        <x:context>
+                            <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                                <system-characteristics>
+                                    <security-sensitivity-level>low</security-sensitivity-level>
+                                </system-characteristics>
+                                <control-implementation/>
+                            </system-security-plan>
+                        </x:context>
                     </x:context>
                     <x:expect-report id="planned-requirements-report" label="must be reported."/>
                 </x:scenario>
                 <x:scenario label="a count of all controls with a status of partial">
                     <x:context>
-                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0" />
+                        <x:context>
+                            <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                                <system-characteristics>
+                                    <security-sensitivity-level>low</security-sensitivity-level>
+                                </system-characteristics>
+                                <control-implementation/>
+                            </system-security-plan>
+                        </x:context>
                     </x:context>
                     <x:expect-report id="partial-requirements-report" label="must be reported."/>
                 </x:scenario>
                 <x:scenario label="and each one has its implementation status set">
                     <x:context>
                         <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                            <system-characteristics>
+                                <security-sensitivity-level>low</security-sensitivity-level>
+                            </system-characteristics>
                             <control-implementation>
                                 <implemented-requirement control-id="ac-1" uuid="eee8697a-bc39-45aa-accc-d3e534932efb">
                                     <prop name="planned-completion-date" ns="https://fedramp.gov/ns/oscal">2020-11-27Z</prop>
