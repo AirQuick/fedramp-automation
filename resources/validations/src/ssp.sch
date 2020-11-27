@@ -165,7 +165,6 @@
 
 <sch:pattern>
     <sch:rule context="/o:system-security-plan">
-        <sch:let name="value-set-name" value="security-sensitivity-level"/>
         <sch:let name="registry" value="$registry-href => lv:registry()"/>
         <sch:let name="ok-values" value="$registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']"/>
         <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level() => lv:if-empty-default('')"/>
