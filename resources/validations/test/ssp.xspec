@@ -48,6 +48,23 @@
                     </x:context>
                     <x:expect-report id="each-required-control-report" label="must be reported."/>
                 </x:scenario>
+                <x:scenario label="and any control's implemented requirement is defined with an invalid status">
+                    <x:context>
+                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                            <system-characteristics>
+                                <security-sensitivity-level>low</security-sensitivity-level>
+                            </system-characteristics>
+                            <control-implementation>
+                                <implemented-requirement control-id="at-1" uuid="eee8697a-bc39-45aa-accc-d3e534932efb">
+                                    <annotation name="implementation-status" ns="https://fedramp.gov/ns/oscal" value="inconceivable">
+                                    <remarks></remarks>
+                                    </annotation>
+                                </implemented-requirement>
+                            </control-implementation>
+                        </system-security-plan>
+                    </x:context>
+                    <x:expect-assert id="invalid-implementation-status" label="it is invalid."/>
+                </x:scenario>
                 <x:scenario label="summary counts of controls' implementated requirements and those with valid and invalid statuses">
                     <x:context>
                         <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
