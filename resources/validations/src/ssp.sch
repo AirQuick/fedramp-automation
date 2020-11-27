@@ -168,11 +168,12 @@
         <sch:let name="registry" value="$registry-href => lv:registry()"/>
         <sch:let name="ok-levels" value="$registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']"/>
         <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level()"/>
-        <sch:let name="corrections" value="lv:correct($ok-levels, lv:if-empty-default(lv:sensitivity-level(/), 'none'))"/>
-        <sch:assert role="fatal" id="no-registry-values" test="exists($registry/f:fedramp-values)"
+        <sch:let name="corrections" value="lv:correct($ok-levels, $sensitivity-level => lv:if-empty-default('none'))"/>
+        <sch:assert role="fatal" id="no-registry-values" test="count($registry/f:fedramp-values/f:value-set) > 0"
             >The registry values at the path '<sch:value-of select="$registry-href"/>' are not present, this configuration is invalid.</sch:assert>
         <sch:assert role="fatal" id="no-security-sensitivity-level" test="not(empty($sensitivity-level))">No sensitivty level found.</sch:assert>
-        <sch:assert id="invalid-security-sensitivity-level" test="empty($ok-levels) or not(exists($corrections))"><sch:value-of select="./name()"/> is an invalid value '<sch:value-of select="lv:sensitivity-level(/)"/>', not an allowed value <sch:value-of select="$corrections"/>.
+        <sch:assert id="invalid-security-sensitivity-level" test="empty($ok-levels) or not(exists($corrections))"
+            ><sch:value-of select="./name()"/> is an invalid value '<sch:value-of select="lv:sensitivity-level(/)"/>', not an allowed value of <sch:value-of select="$corrections"/>.
         </sch:assert>
     </sch:rule>
 
