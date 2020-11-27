@@ -15,10 +15,10 @@
 <xsl:param name="registry-href" select="'../../xml?select=*.xml'"/>
 
 <xsl:function name="lv:if-empty-default" as="item()">
-    <xsl:param name="element" as="element()*"/>
+    <xsl:param name="element" as="node()*"/>
     <xsl:param name="default" as="xs:anyAtomicType"/>
     <xsl:choose>
-        <xsl:when test="not($element/*) and normalize-space($element)=''">
+        <xsl:when test="not($element/*) or normalize-space($element)=''">
             <xsl:value-of select="$default"/>
         </xsl:when>
         <xsl:otherwise>
