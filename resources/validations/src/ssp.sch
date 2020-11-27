@@ -165,6 +165,7 @@
 
 <sch:pattern>
     <sch:rule context="/o:system-security-plan">
+        <sch:let name="value-set-name" value="security-sensitivity-level"/>
         <sch:let name="registry" value="$registry-href => lv:registry()"/>
         <sch:let name="ok-values" value="$registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']"/>
         <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level() => lv:if-empty-default('')"/>
@@ -189,7 +190,7 @@
         <sch:assert id="incomplete-implementation-requirements" test="not(exists($missing))">This SSP has not implemented <sch:value-of select="count($missing)"/><sch:value-of select="if (count($missing)=1) then ' control' else ' controls'"/>: <sch:value-of select="$missing/@id"/></sch:assert>
         <sch:let name="results" value="$ok-values => lv:analyze(//o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
         <sch:let name="total" value="$results/reports/@count"/>
-        <sch:assert id="stats-control-requirements" test="count($results/errors/error) = 0"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:assert>
+        <sch:report id="control-implemented-requirements-stats" test="count($results/errors/error) = 0"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:report>
     </sch:rule>
 
     <sch:rule context="/o:system-security-plan/o:control-implementation/o:implemented-requirement">

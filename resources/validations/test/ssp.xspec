@@ -50,21 +50,18 @@
                 </x:scenario>
                 <x:scenario label="summary counts of controls' implementated requirements and those with valid and invalid statuses">
                     <x:context>
-                        <x:context>
-                            <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
-                                <system-characteristics>
-                                    <security-sensitivity-level>low</security-sensitivity-level>
-                                </system-characteristics>
-                                <control-implementation>
-                                    <implemented-requirement control-id="ac-1" uuid="eee8697a-bc39-45aa-accc-d3e534932efb">
-                                        <prop name="planned-completion-date" ns="https://fedramp.gov/ns/oscal">2020-11-27Z</prop>
-                                        <annotation name="implementation-status" ns="https://fedramp.gov/ns/oscal" value="planned">
-                                        <remarks></remarks>
-                                        </annotation>
-                                    </implemented-requirement>
-                                </control-implementation>
-                            </system-security-plan>
-                        </x:context>
+                        <system-security-plan xmlns="http://csrc.nist.gov/ns/oscal/1.0">
+                            <system-characteristics>
+                                <security-sensitivity-level>low</security-sensitivity-level>
+                            </system-characteristics>
+                            <control-implementation>
+                                <implemented-requirement control-id="cm-1" uuid="eee8697a-bc39-45aa-accc-d3e534932efb">
+                                    <annotation name="implementation-status" ns="https://fedramp.gov/ns/oscal" value="implemented">
+                                    <remarks></remarks>
+                                    </annotation>
+                                </implemented-requirement>
+                            </control-implementation>
+                        </system-security-plan>
                     </x:context>
                     <x:expect-report id="control-implemented-requirements-stats" label="must be reported."/>
                 </x:scenario>
