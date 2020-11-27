@@ -15,14 +15,14 @@
 <xsl:param name="registry-href" select="'../../xml?select=*.xml'"/>
 
 <xsl:function name="lv:if-empty-default" as="item()">
-    <xsl:param name="element" as="node()*"/>
+    <xsl:param name="node" as="node()*"/>
     <xsl:param name="default" as="xs:anyAtomicType"/>
     <xsl:choose>
-        <xsl:when test="not($element/*) or normalize-space($element)=''">
+        <xsl:when test="not(exists($node)) or normalize-space($node)=''">
             <xsl:value-of select="$default"/>
         </xsl:when>
         <xsl:otherwise>
-            <xsl:value-of select="$element"/>
+            <xsl:value-of select="$node"/>
         </xsl:otherwise>
     </xsl:choose>
 </xsl:function>
@@ -62,7 +62,7 @@
 
 <xsl:function name="lv:correct">
     <xsl:param name="value-set" as="element()*"/>
-    <xsl:param name="value"/>
+    <xsl:param name="value" as="node()*"/>
     <xsl:variable name="values" select="$value-set/f:allowed-values/f:enum/@value"/>
     <xsl:choose>
         <!-- If allow-other is set, anything is valid. -->
@@ -166,28 +166,28 @@
 <sch:pattern>
     <sch:rule context="/o:system-security-plan">
         <sch:let name="registry" value="$registry-href => lv:registry()"/>
-        <sch:let name="ok-levels" value="$registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']"/>
-        <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level()"/>
-        <sch:let name="corrections" value="lv:correct($ok-levels, $sensitivity-level => lv:if-empty-default('none'))"/>
+        <sch:let name="ok-values" value="$registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']"/>
+        <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level() => lv:if-empty-default('')"/>
+        <sch:let name="corrections" value="lv:correct($ok-values, $sensitivity-level)"/>
         <sch:assert role="fatal" id="no-registry-values" test="count($registry/f:fedramp-values/f:value-set) > 0"
             >The registry values at the path '<sch:value-of select="$registry-href"/>' are not present, this configuration is invalid.</sch:assert>
-        <sch:assert role="fatal" id="no-security-sensitivity-level" test="not(empty($sensitivity-level))">No sensitivty level found.</sch:assert>
-        <sch:assert id="invalid-security-sensitivity-level" test="empty($ok-levels) or not(exists($corrections))"
-            ><sch:value-of select="./name()"/> is an invalid value '<sch:value-of select="lv:sensitivity-level(/)"/>', not an allowed value of <sch:value-of select="$corrections"/>.
+        <sch:assert role="fatal" id="no-security-sensitivity-level" test="$sensitivity-level != ''">No sensitivty level found, no more validation processing can occur.</sch:assert>
+        <sch:assert role="fatal" id="invalid-security-sensitivity-level" test="empty($ok-values) or not(exists($corrections))"
+            ><sch:value-of select="./name()"/> is an invalid value of '<sch:value-of select="lv:sensitivity-level(/)"/>', not an allowed value of <sch:value-of select="$corrections"/>. No more validation processing can occur.
         </sch:assert>
     </sch:rule>
 
     <sch:rule context="/o:system-security-plan/o:control-implementation">
     <sch:let name="registry" value="$registry-href => lv:registry()"/>
         <sch:let name="sensitivity-level" value="/ => lv:sensitivity-level()"/>
-        <sch:let name="ok-statuses" value="$registry/f:fedramp-values/f:value-set[@name='control-implementation-status']"/>
+        <sch:let name="ok-values" value="$registry/f:fedramp-values/f:value-set[@name='control-implementation-status']"/>
         <sch:let name="selected-profile" value="$sensitivity-level => lv:profile()"/>
         <sch:let name="required-controls" value="$selected-profile/*//o:control"/>
         <sch:let name="implemented" value="o:implemented-requirement"/>
         <sch:let name="missing" value="$required-controls[not(@id = $implemented/@control-id)]"/>
-        <sch:report id="each-required-control-report" test="exists(required-controls)">The following <sch:value-of select="count($required-controls)"/><sch:value-of select="if (count($required-controls)=1) then ' control' else ' controls'"/> are required: <sch:value-of select="$required-controls/@id"/></sch:report>
+        <sch:report id="each-required-control-report" test="count($required-controls) > 0">The following <sch:value-of select="count($required-controls)"/><sch:value-of select="if (count($required-controls)=1) then ' control' else ' controls'"/> are required: <sch:value-of select="$required-controls/@id"/></sch:report>
         <sch:assert id="incomplete-implementation-requirements" test="not(exists($missing))">This SSP has not implemented <sch:value-of select="count($missing)"/><sch:value-of select="if (count($missing)=1) then ' control' else ' controls'"/>: <sch:value-of select="$missing/@id"/></sch:assert>
-        <sch:let name="results" value="$ok-statuses => lv:analyze(//o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
+        <sch:let name="results" value="$ok-values => lv:analyze(//o:implemented-requirement/o:annotation[@name='implementation-status'])"/>
         <sch:let name="total" value="$results/reports/@count"/>
         <sch:assert id="stats-control-requirements" test="count($results/errors/error) = 0"><sch:value-of select="$results => lv:report() => normalize-space()"/></sch:assert>
     </sch:rule>
