@@ -15,30 +15,9 @@
     files.
 -->
 
-<!-- 
-    This workaround is only to allow XSpec to source the proper context for
-    XPath at the global level. We use XSpec for unit testing, and this is a
-    known issue with very well-documented work-arounds.
-    
-    https://gitter.im/usnistgov-OSCAL/FedRAMP-10x-Schematron?at=5fa06e38f2fd4f60fc4ccec7
-    
-    https://github.com/xspec/xspec/issues/873
-    https://github.com/xspec/xspec/issues/892
-    https://github.com/xspec/xspec/issues/1239
-
-    See the updated documentation below about the global-context-item pattern.
-
-    https://github.com/xspec/xspec/wiki/Writing-Scenarios/ec19017ab00d769b49786cb227e57eaa2e4ee2b2#global-context-item
-    https://github.com/AirQuick/xspec/tree/14ccd455a0e420c97903c06f0faea86719031044/tutorial/global-context-item
-
-    If not, you will definitely see this error like below when running the test suite.
-
-    XPDY0002  Finding root of root/key-name the context item is absent
--->
-<xsl:param as="document-node(element(o:system-security-plan))" name="global-context-item" select="." />
 <xsl:param name="fedramp-registry-href" select="'../../xml?select=*.xml'" />
 <xsl:variable name="fedramp-registry" select="collection($fedramp-registry-href)"/>
-<xsl:variable name="selected-sensitivty-level" select="$global-context-item/o:system-security-plan/o:system-characteristics/o:security-sensitivity-level"/>
+<xsl:variable name="selected-sensitivty-level" select="/o:system-security-plan/o:system-characteristics/o:security-sensitivity-level"/>
 
 <sch:let name="sensitivity-levels" value="$fedramp-registry/f:fedramp-values/f:value-set[@name='security-sensitivity-level']/f:allowed-values/f:enum/@value"/>
 <sch:let name="implementation-statuses" value="$fedramp-registry/f:fedramp-values/f:value-set[@name='control-implementation-status']/f:allowed-values/f:enum/@value"/>
